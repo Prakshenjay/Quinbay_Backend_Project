@@ -15,32 +15,32 @@ public class InstructorController {
     private InstructorService instructorService;
 
     @PostMapping("/addInstructor")
-    public ResponseEntity<ApiResponse<InstructorDTO>> addInstructor(@RequestBody InstructorDTO instructorDTO) {
+    public ApiResponse<InstructorDTO> addInstructor(@RequestBody InstructorDTO instructorDTO) {
         return instructorService.addInstructor(instructorDTO);
     }
 
     @GetMapping("/getInstructor")
-    public ResponseEntity<ApiResponse<InstructorDTO>> getInstructor(@RequestParam Long id) {
+    public ApiResponse<InstructorDTO> getInstructor(@RequestParam Long id) {
         return instructorService.getInstructor(id);
     }
 
     @DeleteMapping("/deleteInstructor")
-    public ResponseEntity<ApiResponse<Boolean>> deleteInstructor(@RequestParam Long id) {
+    public ApiResponse<Boolean> deleteInstructor(@RequestParam Long id) {
         return instructorService.deleteInstructor(id);
     }
 
     @PostMapping("/enrollCourse")
-    public ResponseEntity<ApiResponse<Boolean>> enrollCourse(@RequestParam Long instructorId, @RequestParam Long courseId) {
+    public ApiResponse<Boolean> enrollCourse(@RequestParam Long instructorId, @RequestParam Long courseId) {
         return instructorService.enrollCourse(instructorId, courseId);
     }
 
     @DeleteMapping("/withdrawCourse")
-    public ResponseEntity<ApiResponse<Boolean>> withdrawCourse(@RequestParam Long instructorId, @RequestParam Long courseId) {
+    public ApiResponse<Boolean> withdrawCourse(@RequestParam Long instructorId, @RequestParam Long courseId) {
         return instructorService.withdrawCourse(instructorId, courseId);
     }
 
     @PostMapping("/updateCourseStatus")
-    public ResponseEntity<ApiResponse<Boolean>> updateCourseStatus(@RequestParam Long studentId, @RequestParam Long courseId, @RequestParam String status) {
+    public ApiResponse<Boolean> updateCourseStatus(@RequestParam Long studentId, @RequestParam Long courseId, @RequestParam String status) {
         return instructorService.updateCourseStatus(studentId, courseId, status);
     }
 }

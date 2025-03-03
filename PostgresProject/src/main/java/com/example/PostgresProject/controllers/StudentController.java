@@ -17,32 +17,32 @@ public class StudentController {
     private StudentService studentService;
 
     @PostMapping("/addStudent")
-    public ResponseEntity<ApiResponse<StudentDTO>> addStudent(@RequestBody StudentDTO studentDTO) {
+    public ApiResponse<StudentDTO> addStudent(@RequestBody StudentDTO studentDTO) {
         return studentService.addStudent(studentDTO);
     }
 
     @GetMapping("/getStudent")
-    public ResponseEntity<ApiResponse<StudentDTO>> getStudent(@RequestParam Long id) {
+    public ApiResponse<StudentDTO> getStudent(@RequestParam Long id) {
         return studentService.getStudent(id);
     }
 
     @DeleteMapping("/deleteStudent")
-    public ResponseEntity<ApiResponse<Boolean>> deleteStudent(@RequestParam Long id) {
+    public ApiResponse<Boolean> deleteStudent(@RequestParam Long id) {
         return studentService.deleteStudent(id);
     }
 
     @PostMapping("/registerCourse")
-    public ResponseEntity<ApiResponse<Boolean>> registerCourse(@RequestParam Long studentId, @RequestParam Long courseId) {
+    public ApiResponse<Boolean> registerCourse(@RequestParam Long studentId, @RequestParam Long courseId) {
         return studentService.registerCourse(studentId, courseId);
     }
 
     @DeleteMapping("/withdrawCourse")
-    public ResponseEntity<ApiResponse<Boolean>> withdrawCourse(@RequestParam Long studentId, @RequestParam Long courseId) {
+    public ApiResponse<Boolean> withdrawCourse(@RequestParam Long studentId, @RequestParam Long courseId) {
         return studentService.withdrawCourse(studentId, courseId);
     }
 
     @GetMapping("/getCourseProgressView")
-    public ResponseEntity<ApiResponse<Map>> getCourseProgressView(@RequestParam Long id) {
+    public ApiResponse<Map> getCourseProgressView(@RequestParam Long id) {
         return studentService.getCourseProgressView(id);
     }
 }

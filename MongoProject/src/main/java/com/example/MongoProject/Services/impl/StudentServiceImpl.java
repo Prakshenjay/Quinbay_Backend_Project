@@ -43,8 +43,8 @@ public class StudentServiceImpl implements StudentService {
     private StudentCourseRepository studentCourseRepository;
 
     @Override
-    // @CachePut(value = "students", key = "#studentDTO.id")
-    public ResponseEntity<ApiResponse<StudentDTO>> addStudent(StudentDTO studentDTO){
+    @CachePut(value = "students", key = "#studentDTO.id")
+    public ApiResponse<StudentDTO> addStudent(StudentDTO studentDTO){
         log.info("Adding new student: {}", studentDTO);
         Student student = new Student();
         BeanUtils.copyProperties(studentDTO, student);
@@ -70,17 +70,17 @@ public class StudentServiceImpl implements StudentService {
 
         BeanUtils.copyProperties(student, studentDTO);
         log.info("Student added successfully: {}", studentDTO);
-        return ResponseEntity.ok(new ApiResponse<>("success", "Student Saved Successfully", studentDTO));
+        return (new ApiResponse<>("success", "Student Saved Successfully", studentDTO));
     }
 
     @Override
-    // @Cacheable(value = "students", key = "#id")
-    public ResponseEntity<ApiResponse<String>> getStudent(String id){
+    @Cacheable(value = "students", key = "#id")
+    public ApiResponse<String> getStudent(String id){
         log.info("Fetching student with ID: {}", id);
         Student student = studentRepository.findById(id).orElse(null);
         if (student == null) {
             log.warn("Student not found with ID: {}", id);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>("Not Found", "error", null));
+            return (new ApiResponse<>("Not Found", "error", null));
         }
 
         StudentDTO studentDTO = new StudentDTO();
@@ -92,25 +92,25 @@ public class StudentServiceImpl implements StudentService {
         studentDTO.setCourseIds(courseIds);
 
         log.info("Student fetched successfully: {}", studentDTO);
-        return ResponseEntity.ok(new ApiResponse<>("success", "Student is Present", studentDTO.toString()));
+        return (new ApiResponse<>("success", "Student is Present", studentDTO.toString()));
     }
 
     @Override
-    // @CacheEvict(value = "students", key = "#id")
-    public ResponseEntity<ApiResponse<Boolean>> deleteStudent(String id){
+    @CacheEvict(value = "students", key = "#id")
+    public ApiResponse<Boolean> deleteStudent(String id){
         log.info("Deleting student with ID: {}", id);
         Student student = studentRepository.findById(id).orElse(null);
         if (student != null) {
             studentRepository.deleteById(id);
             log.info("Student deleted successfully with ID: {}", id);
-            return ResponseEntity.ok(new ApiResponse<>("success", "Student Successfully Deleted", true));
+            return (new ApiResponse<>("success", "Student Successfully Deleted", true));
         }
         log.warn("Failed to delete student with ID: {}", id);
-        return ResponseEntity.ok(new ApiResponse<>("Student Not Deleted", "error", false));
+        return (new ApiResponse<>("Student Not Deleted", "error", false));
     }
 
     @Override
-    public ResponseEntity<ApiResponse<Boolean>> registerCourse(String studentId, String courseId){
+    public ApiResponse<Boolean> registerCourse(String studentId, String courseId){
         log.info("Registering student {} for course {}", studentId, courseId);
         Student student = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student Id Invalid"));
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new RuntimeException("Course Id Invalid"));
@@ -118,7 +118,7 @@ public class StudentServiceImpl implements StudentService {
         StudentCourse sc = studentCourseRepository.findByStudentIdAndCourseId(studentId, courseId);
         if(sc != null){
             log.warn("Student {} already enrolled in course {}", studentId, courseId);
-            return ResponseEntity.ok(new ApiResponse<>("Student Already enrolled", "error", false));
+            return (new ApiResponse<>("Student Already enrolled", "error", false));
         }
 
         StudentCourse studentCourse = new StudentCourse();
@@ -131,11 +131,11 @@ public class StudentServiceImpl implements StudentService {
         studentRepository.save(student);
 
         log.info("Student {} successfully enrolled in course {}", studentId, courseId);
-        return ResponseEntity.ok(new ApiResponse<>("success", "Student Successfully Enrolled to Course", true));
+        return (new ApiResponse<>("success", "Student Successfully Enrolled to Course", true));
     }
 
     @Override
-    public ResponseEntity<ApiResponse<Boolean>> withdrawCourse(String studentId, String courseId){
+    public ApiResponse<Boolean> withdrawCourse(String studentId, String courseId){
         log.info("Withdrawing student {} from course {}", studentId, courseId);
         Student student = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student Id Invalid"));
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new RuntimeException("Course Id Invalid"));
@@ -143,7 +143,7 @@ public class StudentServiceImpl implements StudentService {
         StudentCourse studentCourse = studentCourseRepository.findByStudentIdAndCourseId(studentId, courseId);
         if(studentCourse == null){
             log.warn("Student {} not enrolled in course {}", studentId, courseId);
-            return ResponseEntity.ok(new ApiResponse<>("Student Not enrolled", "error", false));
+            return (new ApiResponse<>("Student Not enrolled", "error", false));
         }
 
         course.getStudentCourses().remove(studentCourse);
@@ -153,11 +153,11 @@ public class StudentServiceImpl implements StudentService {
         courseRepository.save(course);
 
         log.info("Student {} successfully withdrawn from course {}", studentId, courseId);
-        return ResponseEntity.ok(new ApiResponse<>("success", "Student Successfully Withdrawn from Course", true));
+        return (new ApiResponse<>("success", "Student Successfully Withdrawn from Course", true));
     }
 
     @Override
-    public ResponseEntity<ApiResponse<Map>> getCourseProgressView(String studentId){
+    public ApiResponse<Map> getCourseProgressView(String studentId){
         log.info("Fetching course progress for student {}", studentId);
         Student student = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student Id Invalid"));
 
@@ -167,6 +167,6 @@ public class StudentServiceImpl implements StudentService {
         });
 
         log.info("Course progress retrieved for student {}: {}", studentId, progress);
-        return ResponseEntity.ok(new ApiResponse<>("success", "Student Course Progress Retrieved", progress));
+        return (new ApiResponse<>("success", "Student Course Progress Retrieved", progress));
     }
 }

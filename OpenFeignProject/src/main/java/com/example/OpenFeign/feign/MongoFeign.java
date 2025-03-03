@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface MongoFeign {
 
     @PostMapping("/addStudent")
-    ResponseEntity<ApiResponse<StudentDTO>> addStudent(@RequestBody StudentDTO dto);
+    ApiResponse<StudentDTO> addStudent(@RequestBody StudentDTO dto);
 
     @GetMapping("/getStudent")
-    ResponseEntity<ApiResponse<StudentDTO>> getStudent(@RequestParam String id);
+    ApiResponse<StudentDTO> getStudent(@RequestParam String id);
 }

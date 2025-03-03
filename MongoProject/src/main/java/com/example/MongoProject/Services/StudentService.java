@@ -7,10 +7,10 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
 public interface StudentService {
-    ResponseEntity<ApiResponse<StudentDTO>> addStudent(StudentDTO studentDTO);
-    ResponseEntity<ApiResponse<String>> getStudent(String id);
-    ResponseEntity<ApiResponse<Boolean>> deleteStudent(String id);
-    ResponseEntity<ApiResponse<Boolean>> registerCourse(String studentId, String courseId);
-    ResponseEntity<ApiResponse<Boolean>> withdrawCourse(String studentId, String courseId);
-    ResponseEntity<ApiResponse<Map>> getCourseProgressView(String studentId);
+    ApiResponse<StudentDTO> addStudent(StudentDTO studentDTO);
+    ApiResponse<String> getStudent(String id);
+    ApiResponse<Boolean> deleteStudent(String id);
+    ApiResponse<Boolean> registerCourse(String studentId, String courseId);
+    ApiResponse<Boolean> withdrawCourse(String studentId, String courseId);
+    ApiResponse<Map> getCourseProgressView(String studentId);
 }

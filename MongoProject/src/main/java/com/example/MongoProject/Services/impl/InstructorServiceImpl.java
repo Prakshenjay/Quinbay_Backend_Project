@@ -35,8 +35,8 @@ public class InstructorServiceImpl implements InstructorService {
     private StudentCourseRepository studentCourseRepository;
 
     @Override
-    // @CachePut(value = "instructors", key = "#instructorDTO.id")
-    public ResponseEntity<ApiResponse<InstructorDTO>> addInstructor(InstructorDTO instructorDTO){
+    @CachePut(value = "instructors", key = "#instructorDTO.id")
+    public ApiResponse<InstructorDTO> addInstructor(InstructorDTO instructorDTO){
         log.info("Adding new instructor: {}", instructorDTO);
         Instructor instructor = new Instructor();
         BeanUtils.copyProperties(instructorDTO, instructor);
@@ -52,17 +52,17 @@ public class InstructorServiceImpl implements InstructorService {
         BeanUtils.copyProperties(instructor, instructorDTO);
 
         log.info("Instructor added successfully: {}", instructorDTO);
-        return ResponseEntity.ok(new ApiResponse<>("success", "Instructor Saved Successfully", instructorDTO));
+        return (new ApiResponse<>("success", "Instructor Saved Successfully", instructorDTO));
     }
 
     @Override
-    // @Cacheable(value = "instructors", key = "#id")
-    public ResponseEntity<ApiResponse<InstructorDTO>> getInstructor(String id){
+    @Cacheable(value = "instructors", key = "#id")
+    public ApiResponse<InstructorDTO> getInstructor(String id){
         log.info("Fetching instructor with ID: {}", id);
         Instructor instructor = instructorRepository.findById(id).orElse(null);
         if (instructor == null) {
             log.warn("Instructor not found with ID: {}", id);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>("Instructor Not Found", "error"));
+            return (new ApiResponse<>("Instructor Not Found", "error"));
         }
 
         InstructorDTO instructorDTO = new InstructorDTO();
@@ -70,25 +70,25 @@ public class InstructorServiceImpl implements InstructorService {
         instructorDTO.setOrganizationId(instructor.getOrganization().getId());
 
         log.info("Instructor found: {}", instructorDTO);
-        return ResponseEntity.ok(new ApiResponse<>("success", "Instructor Found", instructorDTO));
+        return (new ApiResponse<>("success", "Instructor Found", instructorDTO));
     }
 
     @Override
-    // @CacheEvict(value = "instructors", key = "#id")
-    public ResponseEntity<ApiResponse<Boolean>> deleteInstructor(String id){
+    @CacheEvict(value = "instructors", key = "#id")
+    public ApiResponse<Boolean> deleteInstructor(String id){
         log.info("Deleting instructor with ID: {}", id);
         Instructor instructor = instructorRepository.findById(id).orElse(null);
         if (instructor != null) {
             instructorRepository.deleteById(id);
             log.info("Instructor successfully deleted with ID: {}", id);
-            return ResponseEntity.ok(new ApiResponse<>("success", "Instructor Successfully Deleted", true));
+            return (new ApiResponse<>("success", "Instructor Successfully Deleted", true));
         }
         log.warn("Instructor not found for deletion with ID: {}", id);
-        return ResponseEntity.ok(new ApiResponse<>("Instructor Not Deleted", "error", false));
+        return (new ApiResponse<>("Instructor Not Deleted", "error", false));
     }
 
     @Override
-    public ResponseEntity<ApiResponse<Boolean>> enrollCourse(String instructorId, String courseId){
+    public ApiResponse<Boolean> enrollCourse(String instructorId, String courseId){
         log.info("Enrolling instructor {} to course {}", instructorId, courseId);
         Instructor instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> {
@@ -103,7 +103,7 @@ public class InstructorServiceImpl implements InstructorService {
 
         if(instructor.getCourse() != null && instructor.getCourse().getId().equals(courseId)){
             log.warn("Instructor already enrolled to course {}", courseId);
-            return ResponseEntity.ok(new ApiResponse<>("Instructor Already enrolled", "error", false));
+            return (new ApiResponse<>("Instructor Already enrolled", "error", false));
         }
 
         instructor.setCourse(course);
@@ -111,11 +111,11 @@ public class InstructorServiceImpl implements InstructorService {
         course.setInstructor(instructor);
         courseRepository.save(course);
         log.info("Instructor {} successfully enrolled to course {}", instructorId, courseId);
-        return ResponseEntity.ok(new ApiResponse<>("success", "Instructor Successfully Enrolled to Course", true));
+        return (new ApiResponse<>("success", "Instructor Successfully Enrolled to Course", true));
     }
 
     @Override
-    public ResponseEntity<ApiResponse<Boolean>> withdrawCourse(String instructorId, String courseId){
+    public ApiResponse<Boolean> withdrawCourse(String instructorId, String courseId){
         log.info("Withdrawing instructor {} from course {}", instructorId, courseId);
         Instructor instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new RuntimeException("Instructor not found"));
@@ -128,14 +128,14 @@ public class InstructorServiceImpl implements InstructorService {
             course.setInstructor(null);
             courseRepository.save(course);
             log.info("Instructor {} successfully withdrawn from course {}", instructorId, courseId);
-            return ResponseEntity.ok(new ApiResponse<>("success", "Instructor Successfully Withdrawn from Course", true));
+            return (new ApiResponse<>("success", "Instructor Successfully Withdrawn from Course", true));
         }
         log.warn("Instructor {} not enrolled in course {}", instructorId, courseId);
-        return ResponseEntity.ok(new ApiResponse<>("Instructor Not enrolled", "error", false));
+        return (new ApiResponse<>("Instructor Not enrolled", "error", false));
     }
 
     @Override
-    public ResponseEntity<ApiResponse<Boolean>> updateCourseStatus(String studentId, String courseId, String status){
+    public ApiResponse<Boolean> updateCourseStatus(String studentId, String courseId, String status){
         log.info("Updating course status for student {} and course {} to status {}", studentId, courseId, status);
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student Not Found"));
@@ -144,7 +144,7 @@ public class InstructorServiceImpl implements InstructorService {
 
         if(!status.equalsIgnoreCase("TO_DO") && !status.equalsIgnoreCase("IN_PROGRESS") && !status.equalsIgnoreCase("COMPLETED")){
             log.error("Invalid course status: {}", status);
-            return ResponseEntity.ok(new ApiResponse<>("Invalid", "Incorrect Status", false));
+            return (new ApiResponse<>("Invalid", "Incorrect Status", false));
         }
 
         StudentCourse sc = studentCourseRepository.findByStudentIdAndCourseId(studentId, courseId);
@@ -162,13 +162,13 @@ public class InstructorServiceImpl implements InstructorService {
             studentCourseRepository.save(sc);
 
             log.info("Course status set to {} for student {} and course {}", status, studentId, courseId);
-            return ResponseEntity.ok(new ApiResponse<>("success", "Course Status Set", true));
+            return (new ApiResponse<>("success", "Course Status Set", true));
         }
 
         sc.setStatus(status.toUpperCase());
         studentCourseRepository.save(sc);
 
         log.info("Course status updated to {} for student {} and course {}", status, studentId, courseId);
-        return ResponseEntity.ok(new ApiResponse<>("success", "Course Status Set", true));
+        return (new ApiResponse<>("success", "Course Status Set", true));
     }
 }

@@ -21,7 +21,7 @@ public class StudentServiceImpl implements StudentService {
     MongoFeign mongoFeign;
 
     @Override
-    public ResponseEntity<ApiResponse<StudentDTO>> addStudent(StudentDTO dto, int feignChoice){
+    public ApiResponse<StudentDTO> addStudent(StudentDTO dto, int feignChoice){
         log.info("Adding student: {} with feignChoice: {}", dto, feignChoice);
 
         if(feignChoice == 1) {
@@ -34,13 +34,12 @@ public class StudentServiceImpl implements StudentService {
         }
         else{
             log.warn("Invalid feignChoice: {}", feignChoice);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponse<>("Invalid Operation", "Choose Option 1 or 2", null));
+            return (new ApiResponse<>("Invalid Operation", "Choose Option 1 or 2", null));
         }
     }
 
     @Override
-    public ResponseEntity<ApiResponse<StudentDTO>> getStudent(String id, int feignChoice){
+    public ApiResponse<StudentDTO> getStudent(String id, int feignChoice){
         log.info("Fetching student with id: {} using feignChoice: {}", id, feignChoice);
 
         if(feignChoice == 1) {
@@ -54,8 +53,7 @@ public class StudentServiceImpl implements StudentService {
         }
         else{
             log.warn("Invalid feignChoice: {}", feignChoice);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponse<>("Invalid Operation", "Choose Option 1 or 2", null));
+            return (new ApiResponse<>("Invalid Operation", "Choose Option 1 or 2", null));
         }
     }
 }

@@ -15,17 +15,17 @@ public class CourseController {
     private CourseService courseService;
 
     @PostMapping("/addCourse")
-    public ResponseEntity<ApiResponse<CourseDTO>> addCourse(@RequestBody CourseDTO courseDTO) {
+    public ApiResponse<CourseDTO> addCourse(@RequestBody CourseDTO courseDTO) {
         return courseService.addCourse(courseDTO);
     }
 
     @GetMapping("/getCourse")
-    public ResponseEntity<ApiResponse<CourseDTO>> getCourse(@RequestParam String id) {
+    public ApiResponse<CourseDTO> getCourse(@RequestParam String id) {
         return courseService.getCourse(id);
     }
 
     @DeleteMapping("/deleteCourse")
-    public ResponseEntity<ApiResponse<Boolean>> deleteCourse(@RequestParam String id) {
+    public ApiResponse<Boolean> deleteCourse(@RequestParam String id) {
         return courseService.deleteCourse(id);
     }
 }

@@ -7,13 +7,13 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
 public interface OrganizationService {
-    ResponseEntity<ApiResponse<OrganizationDTO>> addOrganization(OrganizationDTO organizationDTO);
-    ResponseEntity<ApiResponse<OrganizationDTO>> getOrganization(String id);
-    ResponseEntity<ApiResponse<Boolean>> deleteOrganization(String id);
-    ResponseEntity<ApiResponse<Integer>> getStudentCount(String id);
-    ResponseEntity<ApiResponse<Map>> getStudentCountForEachCourse(String id);
-    ResponseEntity<ApiResponse<Map>> getInstructorDetailsForEachCourse(String id);
-    ResponseEntity<ApiResponse<Integer>> getInstructorCount(String id);
-    ResponseEntity<ApiResponse<Map>> getStudentCourseInstructorByCourse(String id);
-    ResponseEntity<ApiResponse<Object>> getStudentByCourseProgress(String id, String progress);
+    ApiResponse<OrganizationDTO> addOrganization(OrganizationDTO organizationDTO);
+    ApiResponse<OrganizationDTO> getOrganization(String id);
+    ApiResponse<Boolean> deleteOrganization(String id);
+    ApiResponse<Integer> getStudentCount(String id);
+    ApiResponse<Map> getStudentCountForEachCourse(String id);
+    ApiResponse<Map> getInstructorDetailsForEachCourse(String id);
+    ApiResponse<Integer> getInstructorCount(String id);
+    ApiResponse<Map> getStudentCourseInstructorByCourse(String id);
+    ApiResponse<Object> getStudentByCourseProgress(String id, String progress);
 }

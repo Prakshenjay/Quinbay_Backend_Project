@@ -14,12 +14,12 @@ public class StudentController {
     StudentService studentService;
 
     @PostMapping("/addStudent")
-    public ResponseEntity<ApiResponse<StudentDTO>> addStudent(@RequestBody StudentDTO dto, @RequestParam int feignChoice){
+    public ApiResponse<StudentDTO> addStudent(@RequestBody StudentDTO dto, @RequestParam int feignChoice){
         return studentService.addStudent(dto, feignChoice);
     }
 
     @GetMapping("/getStudent")
-    public ResponseEntity<ApiResponse<StudentDTO>> getStudent(@RequestParam String id, @RequestParam int feignChoice){
+    public ApiResponse<StudentDTO> getStudent(@RequestParam String id, @RequestParam int feignChoice){
         return studentService.getStudent(id, feignChoice);
     }
 }

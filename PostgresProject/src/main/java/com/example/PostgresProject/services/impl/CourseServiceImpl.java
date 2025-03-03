@@ -32,8 +32,8 @@ public class CourseServiceImpl implements CourseService {
     private OrganizationRepository organizationRepository;
 
     @Override
-    // @CachePut(value = "courses", key = "#courseDTO.id")
-    public ResponseEntity<ApiResponse<CourseDTO>> addCourse(CourseDTO courseDTO){
+    @CachePut(value = "courses", key = "#courseDTO.id")
+    public ApiResponse<CourseDTO> addCourse(CourseDTO courseDTO){
         log.info("Attempting to add a new course: {}", courseDTO);
         Course course = new Course();
         BeanUtils.copyProperties(courseDTO, course);
@@ -46,7 +46,7 @@ public class CourseServiceImpl implements CourseService {
 
         if(instructor.getCourse() != null){
             log.warn("Instructor already assigned to another course: {}", instructor.getCourse().getId());
-            return ResponseEntity.ok(new ApiResponse<>("failed", "Instructor already has a course", null));
+            return (new ApiResponse<>("failed", "Instructor already has a course", null));
         }
 
         course.setInstructor(instructor);
@@ -60,40 +60,40 @@ public class CourseServiceImpl implements CourseService {
         log.info("Course added successfully with ID: {}", course.getId());
 
         BeanUtils.copyProperties(course, courseDTO);
-        return ResponseEntity.ok(new ApiResponse<>("success", "Course saved Successfully", courseDTO));
+        return (new ApiResponse<>("success", "Course saved Successfully", courseDTO));
     }
 
     @Override
-    // @Cacheable(value = "courses", key = "#id")
-    public ResponseEntity<ApiResponse<CourseDTO>> getCourse(Long id){
+    @Cacheable(value = "courses", key = "#id")
+    public ApiResponse<CourseDTO> getCourse(Long id){
         log.info("Fetching course with ID: {}", id);
         Course course = courseRepository.findById(id).orElse(null);
 
         if (course == null) {
             log.warn("Course not found with ID: {}", id);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>("Not Found", "error"));
+            return (new ApiResponse<>("Not Found", "error"));
         }
 
         CourseDTO courseDTO = new CourseDTO();
         BeanUtils.copyProperties(course, courseDTO);
 
         log.info("Course found: {}", courseDTO);
-        return ResponseEntity.ok(new ApiResponse<>("success", "Course is Present", courseDTO));
+        return (new ApiResponse<>("success", "Course is Present", courseDTO));
     }
 
     @Override
-    // @CacheEvict(value = "courses", key = "#id")
-    public ResponseEntity<ApiResponse<Boolean>> deleteCourse(Long id){
+    @CacheEvict(value = "courses", key = "#id")
+    public ApiResponse<Boolean> deleteCourse(Long id){
         log.info("Attempting to delete course with ID: {}", id);
         Course course = courseRepository.findById(id).orElse(null);
 
         if (course != null) {
             courseRepository.deleteById(id);
             log.info("Course successfully deleted with ID: {}", id);
-            return ResponseEntity.ok(new ApiResponse<>("success", "Course Successfully Deleted", true));
+            return (new ApiResponse<>("success", "Course Successfully Deleted", true));
         }
 
         log.warn("Course not found for deletion with ID: {}", id);
-        return ResponseEntity.ok(new ApiResponse<>("Course Not Deleted", "error", false));
+        return (new ApiResponse<>("Course Not Deleted", "error", false));
     }
 }

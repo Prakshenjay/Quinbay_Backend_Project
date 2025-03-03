@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 public class PostgresFeignFallback implements PostgresFeign {
 
     @Override
-    public ResponseEntity<ApiResponse<StudentDTO>> addStudent(StudentDTO dto){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>("Cant Add", "error", null));
+    public ApiResponse<StudentDTO> addStudent(StudentDTO dto){
+        return (new ApiResponse<>("Cant Add", "error", null));
     }
 
     @Override
-    public ResponseEntity<ApiResponse<StudentDTO>> getStudent(String id){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>("Not Found", "error", null));
+    public ApiResponse<StudentDTO> getStudent(String id){
+        return (new ApiResponse<>("Not Found", "error", null));
     }
 }
